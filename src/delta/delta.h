@@ -15,21 +15,33 @@ struct DELTA_WINDOW {
 
 #include "delta/delta_win32.h"
 
-deltaWindow* deltaCreateWindow(const char* title,
-                       int width, int height) {
+deltaWindow* deltaCreateWindow(const char* title, int x, int y, int w, int h) {
     #if defined(_WIN32) || defined(WIN32)
-        return delta_create_win32_window(title, width, height);
+        return create_win32_window(title, x, y, w, h);
     #endif
 }
 void deltaUpdateWindow(deltaWindow* window) {
     #if defined(_WIN32) || defined(WIN32)
-        delta_poll_messages_win32(window);
+        poll_messages_win32(window);
         SwapBuffers(GetDC(window->win32_window_handle));
     #endif
+
+    return;
 }
 
 int deltaWindowShouldClose(deltaWindow* window) {
     return window->destroyed;
+}
+
+void deltaDestroyWindow(deltaWindow* window) {
+    DestroyWindow(window->win32_window_handle);
+    free(window);
+}
+
+deltaWindow* deltaCopyWindow(deltaWindow* window) {
+    deltaWindow* copy = malloc(sizeof(deltaWindow));
+    memcpy(copy, window, sizeof(deltaWindow));
+    return copy;
 }
 
 #endif
