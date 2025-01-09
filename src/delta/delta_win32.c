@@ -1,6 +1,8 @@
 #include "delta/delta.h"
 #include "delta/delta_win32.h"
 
+#if DELTA_WIN32
+
 void get_last_error_win32(LPCTSTR lpszFunction) { 
     // Retrieve the system error message for the last-error code
 
@@ -157,3 +159,5 @@ DELTA_WIN32_IMPL void poll_messages_win32(dtWindow* window) {
 DELTA_WIN32_IMPL int get_window_state_win32(dtWindow* window, int key, int state) {
     
 }
+
+#endif

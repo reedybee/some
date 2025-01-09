@@ -1,6 +1,10 @@
 #ifndef DELTA_H
 #define DELTA_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 // defines what is a win32 delta function
 #define DELTA_WIN32_IMPL
 
@@ -17,6 +21,12 @@
         int destroyed;
     } typedef dtWindow;
     #include "delta/delta_win32.h"
+#endif
+
+#if defined(__unix__)
+    struct DT_WINDOW {
+        int destroyed;
+    } typedef dtWindow;
 #endif
 
 dtWindow* dtCreateWindow(const char* title, int x, int y, int w, int h) {
