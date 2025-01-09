@@ -42,10 +42,10 @@ LRESULT CALLBACK get_window_proc_win32(HWND hwnd, UINT msg, WPARAM wparam, LPARA
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-DELTA_WIN32_IMPL deltaWindow* create_win32_window(const char* title,int x, int y, int w, int h) {
+DELTA_WIN32_IMPL dtWindow* create_win32_window(const char* title,int x, int y, int w, int h) {
 
-    deltaWindow* window = malloc(sizeof(deltaWindow));
-    memset(window, 0, sizeof(deltaWindow));
+    dtWindow* window = malloc(sizeof(dtWindow));
+    memset(window, 0, sizeof(dtWindow));
 
     window->destroyed = 0;
 
@@ -69,13 +69,18 @@ DELTA_WIN32_IMPL deltaWindow* create_win32_window(const char* title,int x, int y
         get_last_error_win32("Register Class");
     }
 
+    if (x == -1);
+        x = CW_USEDEFAULT; 
+    if (y == -1);
+        y = CW_USEDEFAULT; 
+
     HWND hwnd = CreateWindowEx(
         0, 
         class_name,
         title,
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
+        x,
+        y,
         w,
         h,
         NULL,
@@ -85,7 +90,6 @@ DELTA_WIN32_IMPL deltaWindow* create_win32_window(const char* title,int x, int y
     );
 
     if (hwnd == NULL) {
-        printf("Failed to create win32 window\n");
         get_last_error_win32("Create Win32 Window");
     }
 
@@ -96,7 +100,48 @@ DELTA_WIN32_IMPL deltaWindow* create_win32_window(const char* title,int x, int y
     return window;
 }
 
-DELTA_WIN32_IMPL void poll_messages_win32(deltaWindow* window) {
+DELTA_WIN32_IMPL void set_window_pos_win32(dtWindow* window, int x, int y) {
+
+    if (!SetWindowPos(window->win32_window_handle, NULL, x, y, 0, 0, SWP_NOSIZE)) {
+        get_last_error_win32("Set Window Pos");
+    }
+
+    return;
+}
+
+DELTA_WIN32_IMPL void get_window_pos_win32(dtWindow* window, int* x, int* y) {
+    RECT win_rect = { 0 };
+    if (!GetWindowRect(window->win32_window_handle, &win_rect)) {
+        get_last_error_win32("Get Window Pos");
+    }
+
+    *x = win_rect.left;
+    *y = win_rect.top;
+
+    return;
+}
+
+DELTA_WIN32_IMPL void set_window_size_win32(dtWindow* window, int w, int h) {
+    if (!SetWindowPos(window->win32_window_handle, NULL, 0, 0, w, h, SWP_NOMOVE)) {
+        get_last_error_win32("Set Window Size");
+    }
+
+    return;
+}
+
+DELTA_WIN32_IMPL void get_window_size_win32(dtWindow* window, int* w, int* h) {
+    RECT win_rect = { 0 };
+    if (!GetWindowRect(window->win32_window_handle, &win_rect)) {
+        get_last_error_win32("Get Window Size");
+    }
+
+    *w = win_rect.right - win_rect.left;
+    *h = win_rect.bottom - win_rect.top;
+
+    return;
+}
+
+DELTA_WIN32_IMPL void poll_messages_win32(dtWindow* window) {
     MSG msg = { 0 };
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&msg);
@@ -107,4 +152,8 @@ DELTA_WIN32_IMPL void poll_messages_win32(deltaWindow* window) {
         }
     }
     return;
+}
+
+DELTA_WIN32_IMPL int get_window_state_win32(dtWindow* window, int key, int state) {
+    
 }

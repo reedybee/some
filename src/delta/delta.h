@@ -1,27 +1,31 @@
 #ifndef DELTA_H
 #define DELTA_H
 
-#if defined(_WIN32) || defined(WIN32)
-    #include <windows.h>
-#endif
-
 // defines what is a win32 delta function
 #define DELTA_WIN32_IMPL
 
-struct DELTA_WINDOW {
-    HWND win32_window_handle;
-    int destroyed;
-} typedef deltaWindow;
+#define DELTA_WINDOW_CENTERED -(0x01)
 
-#include "delta/delta_win32.h"
+#define DELTA_KEY_UP 0
+#define DELTA_KEY_DOWN 1
 
-deltaWindow* deltaCreateWindow(const char* title, int x, int y, int w, int h) {
-    #if defined(_WIN32) || defined(WIN32)
+#if defined(_WIN32) || defined(WIN32)
+    #define DELTA_WIN32 1
+    #include <windows.h>
+    struct DT_WINDOW {
+        HWND win32_window_handle;
+        int destroyed;
+    } typedef dtWindow;
+    #include "delta/delta_win32.h"
+#endif
+
+dtWindow* dtCreateWindow(const char* title, int x, int y, int w, int h) {
+    #if DELTA_WIN32
         return create_win32_window(title, x, y, w, h);
     #endif
 }
-void deltaUpdateWindow(deltaWindow* window) {
-    #if defined(_WIN32) || defined(WIN32)
+void dtUpdateWindow(dtWindow* window) {
+    #if DELTA_WIN32
         poll_messages_win32(window);
         SwapBuffers(GetDC(window->win32_window_handle));
     #endif
@@ -29,19 +33,47 @@ void deltaUpdateWindow(deltaWindow* window) {
     return;
 }
 
-int deltaWindowShouldClose(deltaWindow* window) {
+int dtWindowShouldClose(dtWindow* window) {
     return window->destroyed;
 }
 
-void deltaDestroyWindow(deltaWindow* window) {
-    DestroyWindow(window->win32_window_handle);
+void dtDestroyWindow(dtWindow* window) {
+    #if DELTA_WIN32
+        DestroyWindow(window->win32_window_handle);
+    #endif
     free(window);
 }
 
-deltaWindow* deltaCopyWindow(deltaWindow* window) {
-    deltaWindow* copy = malloc(sizeof(deltaWindow));
-    memcpy(copy, window, sizeof(deltaWindow));
+dtWindow* dtCopyWindow(dtWindow* window) {
+    dtWindow* copy = malloc(sizeof(dtWindow));
+    memcpy(copy, window, sizeof(dtWindow));
     return copy;
+}
+
+void dtSetWindowPos(dtWindow* window, int x, int y) {
+    #if DELTA_WIN32
+        set_window_pos_win32(window, x, y);
+    #endif
+    return;
+}
+
+void dtGetWindowPos(dtWindow* window, int* x, int* y) {
+    #if DELTA_WIN32
+        get_window_pos_win32(window, x, y);
+    #endif
+}
+
+void dtSetWindowSize(dtWindow* window, int w, int h) {
+    #if  DELTA_WIN32
+        set_window_size_win32(window, w, h);
+    #endif
+    return;
+}
+
+void dtGetWindowSize(dtWindow* window, int* w, int* h) {
+    #if DELTA_WIN32
+        get_window_size_win32(window, w, h);
+    #endif
 }
 
 #endif

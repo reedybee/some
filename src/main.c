@@ -4,11 +4,11 @@
 
 int main(int argc, char* argv[]) {
 
-    deltaWindow* window = deltaCreateWindow("Meow", 0, 0, 1920 * 0.8, 1080 * 0.8);
+    dtWindow* window = dtCreateWindow("Meow", DELTA_WINDOW_CENTERED, DELTA_WINDOW_CENTERED, 1920 * 0.8, 1080 * 0.8);
 
-    while (!deltaWindowShouldClose(window)) {
-        deltaUpdateWindow(window);
+    while (!dtWindowShouldClose(window)) {
+        dtUpdateWindow(window);
     }
-    deltaDestroyWindow(window);
+    dtDestroyWindow(window);
     return 0;
 }
