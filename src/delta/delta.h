@@ -24,6 +24,7 @@
 #endif
 
 #if defined(__unix__)
+    #define DELTA_UNIX 1
     struct DT_WINDOW {
         int destroyed;
     } typedef dtWindow;
@@ -33,11 +34,18 @@ dtWindow* dtCreateWindow(const char* title, int x, int y, int w, int h) {
     #if DELTA_WIN32
         return create_win32_window(title, x, y, w, h);
     #endif
+    #if DELTA_UNIX
+
+    #endif
 }
 void dtUpdateWindow(dtWindow* window) {
     #if DELTA_WIN32
         poll_messages_win32(window);
         SwapBuffers(GetDC(window->win32_window_handle));
+    #endif
+
+    #if DELTA_UNIX
+    
     #endif
 
     return;
@@ -51,6 +59,11 @@ void dtDestroyWindow(dtWindow* window) {
     #if DELTA_WIN32
         DestroyWindow(window->win32_window_handle);
     #endif
+
+    #if DELTA_UNIX
+    
+    #endif
+
     free(window);
 }
 
@@ -64,6 +77,11 @@ void dtSetWindowPos(dtWindow* window, int x, int y) {
     #if DELTA_WIN32
         set_window_pos_win32(window, x, y);
     #endif
+
+    #if DELTA_UNIX
+    
+    #endif
+
     return;
 }
 
@@ -71,18 +89,37 @@ void dtGetWindowPos(dtWindow* window, int* x, int* y) {
     #if DELTA_WIN32
         get_window_pos_win32(window, x, y);
     #endif
+
+    #if DELTA_UNIX
+    
+    #endif
 }
 
 void dtSetWindowSize(dtWindow* window, int w, int h) {
-    #if  DELTA_WIN32
+    #if DELTA_WIN32
         set_window_size_win32(window, w, h);
     #endif
+
+    #if DELTA_UNIX
+    
+    #endif
+
     return;
 }
 
 void dtGetWindowSize(dtWindow* window, int* w, int* h) {
     #if DELTA_WIN32
         get_window_size_win32(window, w, h);
+    #endif
+
+    #if DELTA_UNIX
+    
+    #endif
+}
+
+int dtGetKey(int key, int action) {
+    #if DELTA_WIN32
+        
     #endif
 }
 

@@ -28,5 +28,7 @@ DELTA_WIN32_IMPL void set_window_size_win32(dtWindow* window, int w, int h);
 
 DELTA_WIN32_IMPL void get_window_size_win32(dtWindow* window, int* w, int* h);
 
+DELTA_WIN32_IMPL int get_key_state_win32(dtWindow* window, int key, int action);
+
 #endif
 #endif

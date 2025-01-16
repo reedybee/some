@@ -1,1 +1,5 @@
 .vscode/settings.json
+out/delta_win32.dll
+out/delta_win32.o
+out/main.exe
+out/delta_win32.o

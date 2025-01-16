@@ -156,7 +156,7 @@ DELTA_WIN32_IMPL void poll_messages_win32(dtWindow* window) {
     return;
 }
 
-DELTA_WIN32_IMPL int get_window_state_win32(dtWindow* window, int key, int state) {
+DELTA_WIN32_IMPL int get_key_state_win32(dtWindow* window, int key, int action) {
     
 }
 
